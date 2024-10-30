@@ -1,7 +1,15 @@
 using ProductManagement;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                      });
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddProductManagement(builder.Configuration);
@@ -13,7 +21,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(MyAllowSpecificOrigins);
 app.UseHttpsRedirection();
 
 app.UseProductManagementEndpoints();
